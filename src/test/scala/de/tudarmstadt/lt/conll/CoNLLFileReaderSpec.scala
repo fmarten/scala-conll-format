@@ -1,10 +1,10 @@
-package de.tudarmstadt.conll
+package de.tudarmstadt.lt.conll
 
 import org.scalatest._
 
 class CoNLLFileReaderSpec extends FunSpec with Matchers {
 
-  it("should read correctly single sentence from conll file") {
+  it("should read correctly single sentence from de.tudarmstadt.de.tudarmstadt.lt.conll.de.tudarmstadt.lt.conll file") {
     val path = getClass.getResource("/conll-single-sentence.csv").getPath
     val reader = CoNLLFileReader.open(path)
 
@@ -29,7 +29,7 @@ class CoNLLFileReaderSpec extends FunSpec with Matchers {
     reader.hasNext should be(false)
   }
 
-  it("should read correctly two sentences from conll file") {
+  it("should read correctly two sentences from de.tudarmstadt.de.tudarmstadt.lt.conll.de.tudarmstadt.lt.conll file") {
     val path = getClass.getResource("/conll-two-sentences.csv").getPath
     val reader = CoNLLFileReader.open(path)
 
@@ -43,7 +43,7 @@ class CoNLLFileReaderSpec extends FunSpec with Matchers {
   }
 
 
-  it("should handle quotes as text in conll file") {
+  it("should handle quotes as text in de.tudarmstadt.de.tudarmstadt.lt.conll.de.tudarmstadt.lt.conll file") {
     val path = getClass.getResource("/conll-with-quotes.csv").getPath
     val reader = CoNLLFileReader.open(path)
 

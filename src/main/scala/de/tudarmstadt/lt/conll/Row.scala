@@ -1,4 +1,4 @@
-package de.tudarmstadt.conll
+package de.tudarmstadt.lt.conll
 
 case class Row(
   id: String, // Word index, integer starting at 1 for each new sentence;

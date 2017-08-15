@@ -1,4 +1,4 @@
-package de.tudarmstadt.conll
+package de.tudarmstadt.lt.conll
 
 import java.io.Closeable
 
@@ -14,7 +14,7 @@ object CoNLLFileReader {
     override val escapeChar: Char = NULL_CHAR
   }
 
-  // For field description see de.tudarmstadt.conll.Row
+  // For field description see de.tudarmstadt.de.tudarmstadt.lt.conll.de.tudarmstadt.de.tudarmstadt.lt.conll.de.tudarmstadt.lt.conll.Row
   val fields = Seq(
     "ID", "FORM", "LEMMA", "UPOSTAG", "XPOSTAG", "FEATS", "HEAD",
     "DEPREL", "DEPS", "MISC"
