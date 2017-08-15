@@ -1,12 +1,18 @@
 package de.tudarmstadt.conll
 
+import java.io.Closeable
+
 import com.github.tototoshi.csv.{CSVReader, TSVFormat}
 
 import scala.io.Source
 
 object CoNLLFileReader {
 
-  implicit val format = new TSVFormat {}
+  private val format = new TSVFormat {
+    private val NULL_CHAR = '\u0000'
+    override val quoteChar: Char = NULL_CHAR
+    override val escapeChar: Char = NULL_CHAR
+  }
 
   // For field description see de.tudarmstadt.conll.Row
   val fields = Seq(
@@ -17,15 +23,40 @@ object CoNLLFileReader {
   def open(path: String): CoNLLFileReader = new CoNLLFileReader(path)
 }
 
-class CoNLLFileReader(path: String) {
+class CoNLLFileReader(path: String) extends Closeable {
 
   private val header = CoNLLFileReader.fields.mkString("\t")
-  private var fileLines = scala.io.Source.fromFile(path).getLines()
+  private val source = scala.io.Source.fromFile(path)
+  private val lineIterator = source.getLines().buffered
+
+  val iterator: Iterator[Sentence] =
+    Iterator.continually{ readNextSentence() }.takeWhile(_.rows.nonEmpty)
+
+  def hasNext: Boolean = iterator.hasNext
+  def nextSentence(): Sentence = iterator.next()
+
+  override def close(): Unit = source.close()
+
+
+  private def takeFromLineIteratorWhile(predicate: (String) => Boolean) = {
+    var result = List[String]()
+    while(lineIterator.hasNext && predicate(lineIterator.head))
+      result = result ::: lineIterator.next() :: Nil
+    result
+  }
+
+  private def extractNextSentencesCommentsAndLines() = {
+    val isComment = (s: String) => s.startsWith("#")
+    val isNotComment = (s: String) => !isComment(s)
+
+    val commentLines = takeFromLineIteratorWhile(isComment)
+    val sentenceLines = takeFromLineIteratorWhile(isNotComment)
+
+    (commentLines, sentenceLines)
+  }
 
   private def readNextSentence() = {
-    val (commentLines, withoutComments) = fileLines.span(_.startsWith("#"))
-    val (sentenceLines, remainingLines) = withoutComments.span(!_.startsWith("#"))
-    fileLines = remainingLines
+    val (commentLines, sentenceLines) = extractNextSentencesCommentsAndLines()
 
     val linesWithHeader = Seq(header) ++ sentenceLines
 
@@ -34,7 +65,7 @@ class CoNLLFileReader(path: String) {
     val csvReader = CSVReader.open(charSource)(CoNLLFileReader.format)
     val rows = csvReader.allWithHeaders() map readRow
 
-    new Sentence(commentLines.toList, rows)
+    new Sentence(commentLines, rows)
   }
 
   private def readRow(row: Map[String, String]): Row = {
@@ -51,9 +82,4 @@ class CoNLLFileReader(path: String) {
         misc = row("MISC")
       )
     }
-
-  private val iterator = Iterator.continually{ readNextSentence() }.takeWhile(_.rows.nonEmpty)
-
-  def hasNext: Boolean = iterator.hasNext
-  def nextSentence(): Sentence = iterator.next()
 }

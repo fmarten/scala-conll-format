@@ -10,3 +10,13 @@
 5	and	and	CC	CC		2	cc	_	O
 6	Mistakes	Mistakes	NNP	NNP		2	conj	2:conj_and	O
 7	.	.	.	.		2	punct	2:punct	O
+# sent_id = http://www.designfloat.com/blog/2011/07/22/website-usability-tips-mistakes-roundup/#1
+# text = More Usability Tips, Tricks and Mistakes.
+0	More	More	NNP	NNP		2	nn	2:nn	O
+1	Usability	Usability	NNP	NNP		2	nn	2:nn	O
+2	Tips	Tips	NNP	NNP		2	ROOT	2:ROOT	O
+3	,	,	,	,		2	punct	2:punct	O
+4	Tricks	Tricks	NNP	NNP		2	conj	2:conj_and	O
+5	and	and	CC	CC		2	cc	_	O
+6	Mistakes	Mistakes	NNP	NNP		2	conj	2:conj_and	O
+7	.	.	.	.		2	punct	2:punct	O
